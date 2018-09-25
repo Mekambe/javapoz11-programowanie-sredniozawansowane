@@ -52,4 +52,9 @@ public class TodoConsoleView {
         return scanner.nextLine();
 
     }
+    public void displayError (String message) {
+        System.out.println("ERROR");
+        System.out.println(message);
+        System.out.println("ERROR");
+    }
 }

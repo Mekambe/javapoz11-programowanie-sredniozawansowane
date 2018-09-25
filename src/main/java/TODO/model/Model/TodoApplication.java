@@ -1,5 +1,7 @@
 package TODO.model.Model;
 
+import TODO.model.Model.Moddel.Exception.InvalidPasswordException;
+import TODO.model.Model.Moddel.Exception.todoUserDoesNotAlreadyExistsException;
 import TODO.model.Model.Moddel.Todo;
 import TODO.model.Model.Moddel.TodoUser;
 import TODO.model.Model.Service.TodoService;
@@ -25,7 +27,7 @@ public class TodoApplication {
     public static void main(String[] args) {
 
         TodoRepository todoRepository = new InMemoryTodoRepository();
-        TodoUserRepository todoUserRepository = new InMemoryTodoUserRepository(Arrays.asList(new TodoUser("Szymek", "abc")));
+        TodoUserRepository todoUserRepository = new InMemoryTodoUserRepository(Arrays.asList(new TodoUser("Szymon", "abc")));
         TodoService todoService = new TodoService(todoRepository, todoUserRepository);
 
         Scanner scanner = new Scanner(System.in);
@@ -40,6 +42,7 @@ public class TodoApplication {
            Integer menu = todoConsoleView.menu();
            switch (menu){
                case 1:
+                   login();
                    break;
                case 2:
                    break;
@@ -56,11 +59,21 @@ public class TodoApplication {
 
     }
 
+    private void login (){
+
+        this.currentUser = null;
+        String name = todoConsoleView.logInName();
+        String password = todoConsoleView.logInPassword();
+try {
+    this.currentUser = todoService.login(name, password);
+}catch (todoUserDoesNotAlreadyExistsException | InvalidPasswordException e) {
+    todoConsoleView.displayError(e.getMessage());
+}
+
+    }
     private void addNewTodo () {
         if (currentUser == null) {
-            String name = todoConsoleView.logInName();
-            String password = todoConsoleView.logInPassword();
-            this.currentUser = todoService.login(name, password);
+            login();
         }
 
         String todoName = todoConsoleView.createNewTodoName();
