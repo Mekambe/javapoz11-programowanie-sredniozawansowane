@@ -57,4 +57,11 @@ public class TodoConsoleView {
         System.out.println(message);
         System.out.println("ERROR");
     }
+
+    public void displaySucces(String message) {
+        System.out.println("SUCCESS");
+        System.out.println(message);
+        System.out.println("SUCCESS");
+
+    }
 }
