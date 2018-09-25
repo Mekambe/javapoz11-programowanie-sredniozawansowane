@@ -37,39 +37,54 @@ public class TodoApplication {
         todoApplication.start();
     }
 
-    public  void start (){
-       do {
-           Integer menu = todoConsoleView.menu();
-           switch (menu){
-               case 1:
-                   login();
-                   break;
-               case 2:
-                   register();
-                   break;
-               case 3:
-                   addNewTodo();
-                   break;
-               case 4:
-                   break;
-                   default:
-                       break;
+    public void start() {
 
-           }
-       } while (true);
+        Boolean flag = true;
+
+        do {
+            Integer menu = todoConsoleView.menu();
+            switch (menu) {
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    register();
+                    break;
+                case 3:
+                    addNewTodo();
+                    break;
+                case 4:
+                    showToDoList();
+                    break;
+                case 0:
+                default:
+                    todoConsoleView.exit();
+                    flag = false;
+                    break;
+
+            }
+        } while (flag);
 
     }
 
-    private void login (){
+    private void showToDoList() {
+
+        Integer option = todoConsoleView.showToDoListWithOptions(todoService.findAllToDo());
+        System.out.println("Wybrano opcje "+ option);
+
+
+    }
+
+    private void login() {
 
         this.currentUser = null;
         String name = todoConsoleView.logInName();
         String password = todoConsoleView.logInPassword();
-try {
-    this.currentUser = todoService.login(name, password);
-}catch (todoUserDoesNotAlreadyExistsException | InvalidPasswordException e) {
-    todoConsoleView.displayError(e.getMessage());
-}
+        try {
+            this.currentUser = todoService.login(name, password);
+        } catch (todoUserDoesNotAlreadyExistsException | InvalidPasswordException e) {
+            todoConsoleView.displayError(e.getMessage());
+        }
         if (this.currentUser != null) {
             todoConsoleView.displaySucces("Uzytkownik o nicku" + name + "\"zalogowany");
         }
@@ -77,37 +92,35 @@ try {
     }
 
 
-    private void register (){
+    private void register() {
 
-       String name = todoConsoleView.registerName();
-       String password = todoConsoleView.registerPassword();
+        String name = todoConsoleView.registerName();
+        String password = todoConsoleView.registerPassword();
         TodoUser user = todoService.register(name, password);
 
         if (user == null) {
-    todoConsoleView.displayError("Nie mozna zarejetsrowac uzytkownika.\n" + "Uzytkownik o podnaje nazwie juz istnieje");
-}else {
-    todoConsoleView.displaySucces ("Udalo Sie Zarejestrowac uzytkownika");
-}
+            todoConsoleView.displayError("Nie mozna zarejetsrowac uzytkownika.\n" + "Uzytkownik o podnaje nazwie juz istnieje");
+        } else {
+            todoConsoleView.displaySucces("Udalo Sie Zarejestrowac uzytkownika");
+        }
 
 
     }
 
 
-
-
-    private void addNewTodo () {
+    private void addNewTodo() {
         if (currentUser == null) {
             login();
         }
+        if (currentUser != null) {
 
-        String todoName = todoConsoleView.createNewTodoName();
-        String todoDescription = todoConsoleView.createNewTodoDescription();
+            String todoName = todoConsoleView.createNewTodoName();
+            String todoDescription = todoConsoleView.createNewTodoDescription();
 
-        Todo todo = new Todo(todoName, this.currentUser);
-todo.setDescription(todoDescription);
-        todoService.save(todo);
-
-
+            Todo todo = new Todo(todoName, this.currentUser);
+            todo.setDescription(todoDescription);
+            todoService.save(todo);
+        }
 
     }
 }

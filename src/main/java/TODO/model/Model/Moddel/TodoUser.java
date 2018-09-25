@@ -7,6 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TodoUser {
+    public static TodoUser unnasigned(){
+        return new TodoUser("Nie przypisano", null);
+    }
     private String name;
     private String password;
 

@@ -39,6 +39,6 @@ public class InMemoryTodoRepository implements TodoRepository {
 
     @Override
     public List<Todo> findAll() {
-        return null;
+        return new ArrayList<>(todos);
     }
 }
