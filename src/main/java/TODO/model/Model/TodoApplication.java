@@ -82,6 +82,7 @@ public class TodoApplication {
         String password = todoConsoleView.logInPassword();
         try {
             this.currentUser = todoService.login(name, password);
+
         } catch (todoUserDoesNotAlreadyExistsException | InvalidPasswordException e) {
             todoConsoleView.displayError(e.getMessage());
         }
